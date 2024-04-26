@@ -1,0 +1,116 @@
+package org.example.demo.repository;
+
+import lombok.extern.log4j.Log4j2;
+import org.example.demo.domain.Board;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
+@SpringBootTest
+@Log4j2
+public class BoardRepositoryTests {
+    @Autowired
+    private BoardRepository boardRepository;
+
+    //insert
+    @Test
+    public void testInsert() {
+        IntStream.rangeClosed(1,100).forEach(i -> {
+            Board board = Board.builder()
+                    .title("title.............."+i)
+                    .content("content...................."+i)
+                    .writer("user"+(i%10)) //사용자는 0~9번까지
+                    .build();
+            Board result = boardRepository.save(board);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
+            log.info(result);
+        });
+    }
+
+    @Test
+    public void testSelct() {
+        Long bno =100L;
+
+        Optional<Board> result = boardRepository.findById(bno);  //optional Type으로 받아서 처리해야 함
+        Board board = result.orElseThrow();
+        log.info(board);
+    }
+
+    @Test
+    public void testUpdate() {
+        //Entity는 생성시 불변이면 좋으나 변경이 일어날 경우 최소한으로 설계한다.
+        Long bno =100L;
+
+        Optional<Board> result = boardRepository.findById(bno);  //optional Type으로 받아서 처리해야 함
+        Board board = result.orElseThrow();
+        board.change("update title","update contents100");  //modDate 시간은 바뀌나 regdate 시간은 바뀌지 않는다.
+        boardRepository.save(board);
+        log.info(board);
+    }
+    @Test
+    public void testDelete() {
+        Long bno =100L;
+        Optional<Board> result = boardRepository.findById(bno);
+        Board board = result.orElseThrow();
+        boardRepository.delete(board);
+    }
+
+//    Pageable과 page<E> 타입을 이용한 페이징 처리
+//    페이징 처리는 Pagealbe이라는 타입의 객체를 구성해서 파라미터로 전달
+//    pageable은 인터페이스로 설계되어 있고, 일반적으로 PageRequest.of()를 이용해서 개발함
+//    PageRequest.of(페이지번호, 사이즈) : 페이지번호는 0번부터
+//    PageRequest.of(페이지번호, 사이즈, Sort) : sort객체를 통한 정렬조건 추가
+//    PageRequest.of(페이지번호, 사이즈, Sort.Direction, 속성) : 정렬 방향과 여러 속성 추가 지정
+//    Pageable로 값을 넘기면 반환타입은 Page<T>를 이용하게 됨
+
+    @Test
+    public void testFindAll() {
+        //1. PAGE order by bno desc
+        Pageable pageable = PageRequest.of(0,10, Sort.by("bno").descending()); //domain이 알아서 생성해주기 때문에 따로 코드 진행하지 않아도 괜찮다
+        Page<Board> result =boardRepository.findAll(pageable);
+        log.info("total count : "+result.getTotalElements());   //전체 게시글의 수가 있음
+        log.info("total pages : "+result.getTotalPages());      //전체 페이지 개수
+        log.info("pages number : "+result.getNumber());         //페이지 번호
+        log.info("pages size : "+result.getSize());             //페이지 사이즈
+        log.info("pages has previous : "+result.hasPrevious());             //이전 페이지가 있냐
+        log.info("pages has Next : "+result.hasNext());             //다음 페이지가 있냐
+
+        List<Board> boardList=result.getContent();
+        boardList.forEach(board -> {
+            log.info(board);
+        });
+    }
+    //쿼리 메서드 및 @Query 테스트
+    @Test
+    public void testQueryMethod() {
+        Pageable pageable = PageRequest.of(0,10);
+        String title = "title";
+        Page<Board> result =  boardRepository.findByTitleContainingOrderByBnoDesc(
+                title,
+                pageable
+        );
+        result.getContent().forEach(board -> log.info(board));
+    }
+
+    @Test
+    public void testQueryAnnotation() {
+        Pageable pageable = PageRequest.of(0,10, Sort.by("bno").descending());
+
+        String title = "title";
+        Page<Board> result =  boardRepository.findByTitleContainingOrderByBnoDesc(title,pageable);
+        result.getContent().forEach(board -> log.info(board));
+
+    }
+
+    @Test
+    public void testGetTime(){
+        log.info(boardRepository.getTime());
+    }
+}

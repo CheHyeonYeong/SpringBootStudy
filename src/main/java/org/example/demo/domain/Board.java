@@ -20,4 +20,11 @@ public class Board extends BaseEntity{
 
     @Column(length = 50, nullable = false)
     private String writer;
+
+    //엔티티 내의 변경가능한 타이틀과 content 값을 수정하는 메소드
+    //수정하기 위한 방식을 따로 만들었다. 다른 방식을 넣어도 된다. id가 바뀌지 않으면 된다
+    public void change(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }
