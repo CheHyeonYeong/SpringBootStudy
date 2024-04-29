@@ -19,7 +19,7 @@ abstract class BaseEntity {
     @Column(name = "regdate", updatable = false) //이름은 regdate, update는 불가능
     private LocalDateTime regdate;
 
-    @LastModifiedDate       //
+    @LastModifiedDate       //마지막 수정 날짜
     @Column(name = "moddate")
     private LocalDateTime modDate;
 

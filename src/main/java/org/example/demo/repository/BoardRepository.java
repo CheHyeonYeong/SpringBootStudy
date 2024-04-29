@@ -1,12 +1,13 @@
 package org.example.demo.repository;
 
 import org.example.demo.domain.Board;
+import org.example.demo.repository.search.BoardSearch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface BoardRepository extends JpaRepository<Board, Long> { //type = Board, Boad bno의 type인 id
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch { //type = Board, Boad bno의 type인 id
     //JPA로 DB 관련 작업을 수행하기 위한 id 값
     //하나면 OPTIONAL, 여러개면 LIST -> 쿼리메서드 방식
     Page<Board> findByTitleContainingOrderByBnoDesc(String keyword, Pageable pageable);
@@ -22,5 +23,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> { //type = B
 
     @Query(value = "select now()", nativeQuery = true)
     String getTime();
+
 
 }

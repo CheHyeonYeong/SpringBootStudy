@@ -113,4 +113,25 @@ public class BoardRepositoryTests {
     public void testGetTime(){
         log.info(boardRepository.getTime());
     }
+    @Test
+    public void testSearch(){
+
+        //2번 페이지에 있는 order By bno desc
+        Pageable pageable = PageRequest.of(1,10, Sort.by("bno").descending());
+
+        boardRepository.searchOne(pageable);
+    }
+    @Test
+    public void testSearchAll() {
+        String[] types = {"t","c","w"};
+        String keyword = "1";
+        Pageable pageable = PageRequest.of(1,10,Sort.by("bno").descending());
+
+        Page<Board> result = boardRepository.searchAll(types,keyword,pageable);
+        result.getContent().forEach(board -> log.info(board));
+        log.info("사이즈 : "+ result.getSize());
+        log.info("페이지번호 : "+ result.getNumber());
+        log.info("이전페이지 : "+ result.hasPrevious());
+        log.info("다음페이지 : "+ result.hasNext());
+    }
 }
