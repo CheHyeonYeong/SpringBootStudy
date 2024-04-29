@@ -2,10 +2,13 @@ package org.example.demo.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.example.demo.dto.BoardDTO;
+import org.example.demo.dto.PageRequestDTO;
+import org.example.demo.dto.PageResponseDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.NoSuchElementException;
 
@@ -25,8 +28,8 @@ public class BoardServicetests {
     @Test
     public void saveTest() {
         BoardDTO boardDTO = BoardDTO.builder()
-                .title("title..............")
-                .content("content..........")
+                .title("title 1")
+                .content("content 1")
                 .writer("user"+105050)
                 .build();
 
@@ -61,5 +64,17 @@ public class BoardServicetests {
         Assertions.assertThrows(NoSuchElementException.class, () -> {
             boardService.readOne(bno);
         });
+    }
+
+    @Test
+    public void listTest() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .type("tc")
+                .keyword("1")
+                .page(1)
+                .size(10)
+                .build();
+        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        log.info(responseDTO);
     }
 }
