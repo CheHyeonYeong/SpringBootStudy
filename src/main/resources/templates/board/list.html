@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/basic.html}">
 <div layout:fragment="content">
-<!--    검색 화면 추가 -->
+    <!--    검색 화면 추가 -->
     <div class="row mt-3">
         <form action="/board/list" method="get">
             <div class="col">
@@ -27,11 +27,29 @@
                 </div>
             </div>
         </form>
+        <div class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">게시글 등록 성공</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>[[${result}]]번 게시글이 성공적으로 등록되었습니다.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--여기에 모달을 집어넣는 것임!-->
 
     </div>
 
 
-<!--    목록 정보 출력하는 부분 -->
+    <!--    목록 정보 출력하는 부분 -->
     <div class="row mt-3">
         <div class="col">
             <div class="card">
@@ -57,7 +75,7 @@
 
                             <!--/* #temporals 유틸리티 객체*/-->
                             <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
-<!--                            <td>[[${dto.regDate}]]</td>-->
+                            <!--                            <td>[[${dto.regDate}]]</td>-->
                         </tr>
                         </tbody>
                     </table>
@@ -97,19 +115,31 @@
 
         console.log(target)
 
+
         if(target.tagName !='A'){return }
 
         const num = target.getAttribute("data-num");
         const formObj = document.querySelector("form");
         formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
         formObj.submit();
-        }, false)
+    }, false)
 
     document.querySelector(".clearBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
         self.location = '/board/list'
     }, false)
+
+
+    //show modal
+    //게시글 등록 이후 모달창이 하나 뜰 것이다.
+    const result = [[${result}]]
+
+    const modal = new  bootstrap.Modal(document.querySelector(".modal"))
+
+    if(result){
+        modal.show()
+    }
 
 </script>
 </html>
