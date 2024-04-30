@@ -67,10 +67,10 @@
                             <th scope="col">RegDate</th>
                         </tr>
                         </thead>
-                        <tbody> <!-- 실제 출력데이터-->
+                        <tbody th:with="link = ${pageRequestDTO.getLink()}"> <!-- 실제 출력데이터-->
                         <tr th:each="dto:${responceDTO.dtoList}">
                             <th scope="row">[[${dto.bno}]]</th>
-                            <td>[[${dto.title}]]</td>
+                            <td><a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">[[${dto.title}]]</a></td>
                             <td>[[${dto.writer}]]</td>
 
                             <!--/* #temporals 유틸리티 객체*/-->
