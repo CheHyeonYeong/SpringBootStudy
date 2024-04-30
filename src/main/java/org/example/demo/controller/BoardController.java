@@ -61,5 +61,31 @@ public class BoardController {
         model.addAttribute("dto",boardDTO);
 
     }
+    @PostMapping("/modify")
+    public String modify(PageRequestDTO pageRequestDTO,@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.info("board Modify commin");
+        if(bindingResult.hasErrors()) {
+            log.error("has Error");
+            String link = pageRequestDTO.getLink();
+            redirectAttributes.addFlashAttribute("errors",bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("bno",boardDTO.getBno());
+            return "redirect:/board/modify?"+link;
+        }
+        boardService.modify(boardDTO);
+        redirectAttributes.addFlashAttribute("result","modify success");
+        redirectAttributes.addAttribute("bno",boardDTO.getBno()); //이렇게 하면 뒤에 붙는다.
 
+        return "redirect:/board/read";
+    }
+
+    @PostMapping("/remove")
+    public String remove(Long bno,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
+        log.info("remove : " + bno);
+        boardService.remove(bno);
+        //삭제시에는 페이지 번호를 1로, 사이즈는 전달 받는다.
+        redirectAttributes.addAttribute("page", 1);
+        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
+        return "redirect:/board/list";
+
+    }
 }
