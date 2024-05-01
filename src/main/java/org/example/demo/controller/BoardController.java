@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.demo.dto.BoardDTO;
+import org.example.demo.dto.BoardListReplyCountDTO;
 import org.example.demo.dto.PageRequestDTO;
 import org.example.demo.dto.PageResponseDTO;
 import org.example.demo.service.BoardService;
@@ -25,7 +26,8 @@ public class BoardController {
 
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<BoardDTO> responceDTO = boardService.list(pageRequestDTO);
+//        PageResponseDTO<BoardDTO> responceDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responceDTO = boardService.listWithReplyCount(pageRequestDTO);
         log.info(responceDTO);
         model.addAttribute("responceDTO",responceDTO);
 

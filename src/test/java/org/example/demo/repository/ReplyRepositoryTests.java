@@ -23,8 +23,8 @@ public class ReplyRepositoryTests {
     //테스트 : 있는 게시글 중에 댓글 추가....80번에 댓글추가
     @Test
     public void testInsert() {
-        Board board = Board.builder().bno(96L).build();
-        IntStream.rangeClosed(1,100).forEach(i -> {
+        Board board = Board.builder().bno(104L).build();
+        IntStream.rangeClosed(1, 100).forEach(i -> {
             Reply reply = Reply.builder()
                     .board(board)
                     .replyText("test")

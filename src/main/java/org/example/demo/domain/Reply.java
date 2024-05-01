@@ -24,4 +24,12 @@ public class Reply extends BaseEntity{      //등록 시간 설정이 가능
 
     private String replyText;
     private String replyer;
+
+    public void setBoard(Long bno) {
+        this.board = Board.builder().bno(bno).build();
+    }
+    public void changeText(String text){
+        this.replyText = text;
+    }
+
 }

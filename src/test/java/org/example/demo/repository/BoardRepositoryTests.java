@@ -140,12 +140,16 @@ public class BoardRepositoryTests {
     public void testSearchWithReplyCount(){
         String[] types = {"t","c","w"};
         String keyword = "1";
-        Pageable pageable = PageRequest.of(1,10,Sort.by("bno").descending());
+        Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
         Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword,pageable);
 
         result.getContent().forEach(boardListReplyCountDTO -> {
             log.info(boardListReplyCountDTO);
         });
-
     }
+
+
+
+
+
 }

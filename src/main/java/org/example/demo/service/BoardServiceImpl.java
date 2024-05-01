@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.demo.domain.Board;
 import org.example.demo.dto.BoardDTO;
+import org.example.demo.dto.BoardListReplyCountDTO;
 import org.example.demo.dto.PageRequestDTO;
 import org.example.demo.dto.PageResponseDTO;
 import org.example.demo.repository.BoardRepository;
@@ -72,6 +73,20 @@ public class BoardServiceImpl implements BoardService{
         return PageResponseDTO.<BoardDTO>withAll()      //boardDTO 의 자식 객체까지 상관 없다
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageabble("bno"); //게시글 번호를 기준으로 정렬
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
                 .build();
     }
