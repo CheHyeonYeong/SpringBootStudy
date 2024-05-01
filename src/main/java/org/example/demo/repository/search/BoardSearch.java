@@ -1,6 +1,7 @@
 package org.example.demo.repository.search;
 
 import org.example.demo.domain.Board;
+import org.example.demo.dto.BoardListReplyCountDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,5 +12,5 @@ import org.springframework.data.domain.Pageable;
 public interface BoardSearch {
     Page<Board> searchOne(Pageable pageable);
     Page<Board> searchAll(String[] types,String keyword, Pageable pageable);
-    
+    Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable);       //join 처리함
 }

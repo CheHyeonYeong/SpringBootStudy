@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import org.example.demo.domain.Board;
 import org.example.demo.domain.QBoard;
+import org.example.demo.dto.BoardListReplyCountDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -75,5 +76,11 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         //Page<T> 형식으로 반환 : Page<Board>
         //PageImpl을 통해서 반환 : (알아온 데이터, pageable, (총개수)total)
         return new PageImpl<>(list,pageable,count);
+    }
+
+    @Override
+    public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
+        
+        return null;
     }
 }

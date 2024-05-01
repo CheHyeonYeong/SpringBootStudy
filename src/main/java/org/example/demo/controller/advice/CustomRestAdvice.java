@@ -25,11 +25,9 @@ public class CustomRestAdvice {
         if (e.hasErrors()){
             BindingResult bindingResult = e.getBindingResult();
             bindingResult.getFieldErrors().forEach(fieldError -> {
-                errorMap.put(fieldError.getField(), fieldError.getCode())
+                errorMap.put(fieldError.getField(), fieldError.getCode());
             });
         }
-        return ResponseEntity.badRequest().body(errorMap);
+        return ResponseEntity.badRequest().body(errorMap);      //기존의 417번 에러를 400 에러로 바꿔서 보내준다.
     }
-
-
 }
