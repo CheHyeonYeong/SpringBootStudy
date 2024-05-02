@@ -49,5 +49,9 @@ public class ReplyRepositoryTests {
     }
 
 
+    @Test
+    public void testDelete(){
+        replyRepository.deleteById(111111L);
+    }
 
 }

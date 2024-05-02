@@ -59,4 +59,25 @@ public class ReplyController {
 
     }
 
+    @Operation(summary = "Delete Reply - use Delete method ")
+    @DeleteMapping("/{rno}")
+    public Map<String, Long> deleteReply(@PathVariable("rno") Long rno){
+        replyService.remove(rno);
+
+        Map<String, Long> resultMap = new HashMap<>();
+        resultMap.put("rno",rno);
+        return resultMap;
+    }
+
+    @Operation(summary = "Modify Reply - use Put method ")
+    @PutMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE)      //json 방식으로 값이 들어올 때 쓴다
+    public Map<String, Long> modify(@PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO){
+        replyDTO.setRno(rno);       //번호 일치를 위함
+        replyService.modify(replyDTO);
+
+        Map<String, Long> resultMap = new HashMap<>();
+        resultMap.put("rno",rno);
+        return resultMap;
+    }
+
 }

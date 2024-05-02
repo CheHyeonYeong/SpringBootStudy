@@ -77,4 +77,5 @@ public class BoardServicetests {
         PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
         log.info(responseDTO);
     }
+
 }

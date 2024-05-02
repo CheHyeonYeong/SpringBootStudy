@@ -76,6 +76,11 @@ public class ReplyServiceTests {
         result.getDtoList().forEach(e-> {
             log.info(e);
         });
+    }
 
+    @Test
+    public void testDelete() {
+        Long rno = 1000L;
+        replyService.remove(rno);
     }
 }
