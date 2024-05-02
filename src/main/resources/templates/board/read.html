@@ -56,7 +56,6 @@
             </div>
             <ul class="list-group replyList">
 
-
             </ul>
         </div>
     </div>
@@ -67,6 +66,37 @@
             </ul>
         </div>
     </div>
+
+
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register Reply</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Reply Text</span>
+                        <input type="text" class="form-control replyText">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Replyer</span>
+                        <input type="text" class="form-control replyer">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary resgisterBtn" >Register</button>
+                    <button type="button" class="btn btn-outline-danger closeRegisterBtn" >Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--여기에 모달을 집어넣는 것임!-->
+
+
+
 <!--    reply를 처리하기 위한 javascript 라이브러리 불러오기-->
 <!--    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -96,12 +126,35 @@
             }
         }
         replyList.innerHTML = str;
-
     }
+
+    function printPages(data){//reply page 목록 출력
+        console.log(data)
+        let pageStr = '';
+
+        if(data.prev){
+            pageStr+=`<li class = "page-item">
+                        <a class="page-link" data-page="${data.start -1}">prev</a>
+                        </li>`
+        }
+        for(let i = data.start ; i<=data.end;i++){
+            pageStr += `<li class="page-item ${i==data.page? "active":""}">
+                <a class = "page-link" data-page="${i}">${i}</a>
+                </li>`
+        }
+        if(data.next){
+            pageStr+=`<li class = "page-item">
+                        <a class="page-link" data-page="${data.end + 1}">Next</a>
+                        </li>`
+        }
+        replyPaging.innerHTML = pageStr;
+    }
+
+
     function printReplies(page, size, goLast){
-        console.log(bno, page, size)
         getList({bno, page,size, goLast}).then(data => {
-            printList(data.dtoList)
+            printList(data.dtoList);
+            printPages(data)
         }).catch(e => {console.log(e)})
     }
     //함수 호출

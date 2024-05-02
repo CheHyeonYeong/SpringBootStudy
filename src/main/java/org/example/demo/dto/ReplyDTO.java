@@ -1,5 +1,7 @@
 package org.example.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,7 +24,10 @@ public class ReplyDTO {
     private String replyText;
     @NotEmpty
     private String replyer;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")        //날짜 형식 설정
+    private LocalDateTime regDate;
 
-    private LocalDateTime regDate,modDate;
+    @JsonIgnore                                         //무시
+    private LocalDateTime modDate;
 
 }
