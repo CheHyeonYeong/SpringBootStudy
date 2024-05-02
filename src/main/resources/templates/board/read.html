@@ -73,17 +73,38 @@
     <script src="/js/reply.js"></script>
 </div><!--content end-->
 <script layout:fragment="script" th:inline="javascript">
-    // const bno = [[${dto.bno}]];
     // get1(bno).then(data =>{//정상적 값
     //     console.log(data);
     // }).catch(e=>{console.error(e)})
-    function printReplies(bno,page,size, goLast){
-        getList({bno, page,size, goLast}).then(date=>{
-            console.log(date)
+
+
+    //댓글 목록처리
+    const bno = [[${dto.bno}]];
+    const replyList = document.querySelector('.replyList')      //댓글 목록 DOM
+    const replyPaging = document.querySelector('.replyPaging')  //댓글 페이지 목록 DOM
+
+    function printList(dtoList){
+        let str  = '';
+
+        if(dtoList && dtoList.length >0){
+            for(const dto of dtoList){
+                str +=`<li class = "list-group-item d-flex replyItem">
+                <span class="col-2">${dto.rno}</span>
+                <span class="col-6" data-rno="${dto.rno}">${dto.replyText}</span>
+                <span class="col-2">${dto.replyer}</span>
+                <span class="col-2">${dto.regDate}</span></li>`
+            }
+        }
+        replyList.innerHTML = str;
+
+    }
+    function printReplies(page, size, goLast){
+        console.log(bno, page, size)
+        getList({bno, page,size, goLast}).then(data => {
+            printList(data.dtoList)
         }).catch(e => {console.log(e)})
     }
-//함수 호출
-
+    //함수 호출
     printReplies(1,10)
 </script>
 </html>

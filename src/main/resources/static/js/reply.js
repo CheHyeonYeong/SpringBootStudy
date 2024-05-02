@@ -6,7 +6,7 @@ async function get1(bno){       //async -> 비동기 처리할 함수 명시
 }
 async function getList({bno, page, size, goLast}){
     //golist는 작성시 강제적으로 마지막 페이지를 주기 위해서
-    const result = await axios.get(`/replies/list/${bno}`, {param: {page, size}});
+    const result = await axios.get(`/replies/list/${bno}`, {params : {page, size}});
     return result.data;
 
 }
