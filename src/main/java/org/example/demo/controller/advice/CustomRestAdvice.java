@@ -2,14 +2,17 @@ package org.example.demo.controller.advice;
 
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.log4j.Log4j2;
+import org.example.demo.dto.PageRequestDTO;
+import org.example.demo.dto.PageResponseDTO;
+import org.example.demo.dto.ReplyDTO;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,4 +33,17 @@ public class CustomRestAdvice {
         }
         return ResponseEntity.badRequest().body(errorMap);      //기존의 417번 에러를 400 에러로 바꿔서 보내준다.
     }
+    //예외 관련 항목들은
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ResponseEntity<Map<String,String>> handlerFKException(Exception e){
+        log.info(e);
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("time", ""+System.currentTimeMillis());
+        errorMap.put("msg", e.getMessage());
+
+        return ResponseEntity.badRequest().body(errorMap);
+    }
+
+
 }
