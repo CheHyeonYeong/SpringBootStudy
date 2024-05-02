@@ -68,7 +68,7 @@
     </div>
 
 
-    <div class="modal" tabindex="-1">
+    <div class="modal resgisterModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -159,5 +159,58 @@
     }
     //함수 호출
     printReplies(1,10)
+
+    //댓글 등록 모달
+    const registerModal = new bootstrap.Modal(document.querySelector(".resgisterModal"))
+
+    //registerModal
+    const registerBtn = document.querySelector(".resgisterBtn");
+    const replyText = document.querySelector(".replyText")
+    const replyer = document.querySelector(".replyer")
+    const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
+
+    //add reply btn click -> modal open
+    document.querySelector(".addReplyBtn").addEventListener("click", function (e) {
+        registerModal.show();
+    },false)
+    closeRegisterBtn.addEventListener("click", function (e){
+        registerModal.hide()
+    }, false)
+
+    //등록 처리 버튼 registerBtn
+
+    registerBtn.addEventListener("click", function (e) {
+        const replyObj ={
+            bno:bno,
+            replyText: replyText.value,
+            replyer: replyer.value
+        }
+        addReply(replyObj).then(result =>{
+            alert(result.rno)
+            registerModal.hide()
+            replyText.value =''
+            replyer.value=""
+            printReplies(1,10,true)     //댓글 목록 갱신 처리
+        }).catch(e=> alert("Exception"))
+    }, false)
+
+    let page = 1;
+    let size = 10;
+
+    replyPaging.addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        if(!target ||target.tagName !='A'){
+            return
+        }
+
+        const pageNum  = target.getAttribute("data-page")
+        page = pageNum
+        printReplies(page,size)
+    }, false)
+
+
 </script>
 </html>
