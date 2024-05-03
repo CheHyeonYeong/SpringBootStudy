@@ -9,6 +9,7 @@ import org.example.demo.dto.BoardListReplyCountDTO;
 import org.example.demo.dto.PageRequestDTO;
 import org.example.demo.dto.PageResponseDTO;
 import org.example.demo.service.BoardService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,10 +34,13 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("hasRole('USER')")    //사전 인가 체크 => Role_User와 같은 의미..로 특정 권한 사용자만 접근 가능하도록 설정
     @GetMapping("/register")
     public void registerGet(Model model) {
 
     }
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/register")
     public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("board Post register commin");
@@ -56,13 +60,15 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
         BoardDTO boardDTO = boardService.readOne(bno);
         log.info(boardDTO);
         model.addAttribute("dto",boardDTO);
-
     }
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("board Modify commin");
@@ -80,6 +86,7 @@ public class BoardController {
         return "redirect:/board/read";
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/remove")
     public String remove(Long bno,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
         log.info("remove : " + bno);
@@ -88,6 +95,5 @@ public class BoardController {
         redirectAttributes.addAttribute("page", 1);
         redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
         return "redirect:/board/list";
-
     }
 }
