@@ -10,9 +10,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -24,7 +27,7 @@ public class CustomerSecurityConfig {
 
     //Remembet Me 서비스를 위한 변수들
     private final DataSource dataSource;                                    //서버 관련 정보 처리
-    private final CustomUserDetailsService customUserDetailsService;        //사용자관련 정보 처리
+    private final UserDetailsService userDetailsService;        //사용자관련 정보 처리
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -36,6 +39,15 @@ public class CustomerSecurityConfig {
         });
         //csrf 설정
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+
+        //remember-me 설정
+        http.rememberMe(httpSecurityRememberMeConfigurer -> {
+            httpSecurityRememberMeConfigurer.key("123456789")           //DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
+                    .tokenRepository(persistentTokenRepository())
+                    .userDetailsService(userDetailsService)
+                    .tokenValiditySeconds(60*60*24*30);     //30일
+        });
+
         return http.build();
     }
 
@@ -50,6 +62,13 @@ public class CustomerSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    //PersistentTokenRepository
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);     //통신을 위함
+        return repo;
     }
 
 }
