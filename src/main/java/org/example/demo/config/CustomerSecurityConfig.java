@@ -3,6 +3,7 @@ package org.example.demo.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.example.demo.security.CustomUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +14,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
+
 @Log4j2
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class CustomerSecurityConfig {
+
+    //Remembet Me 서비스를 위한 변수들
+    private final DataSource dataSource;                                    //서버 관련 정보 처리
+    private final CustomUserDetailsService customUserDetailsService;        //사용자관련 정보 처리
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         log.info("configure");
@@ -31,14 +39,11 @@ public class CustomerSecurityConfig {
         return http.build();
     }
 
-
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         log.info("web configure");
         //static 있는 곳은 무시하겠다는 코드
         return webSecurity -> webSecurity.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-
     }
 
     //패스워드 암호화 처리하는 객체
