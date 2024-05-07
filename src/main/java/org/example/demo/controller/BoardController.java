@@ -40,7 +40,7 @@ public class BoardController {
 
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")  //인증된 사용자만 접근 가능...
     @PostMapping("/register")
     public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("board Post register commin");
@@ -68,7 +68,7 @@ public class BoardController {
         model.addAttribute("dto",boardDTO);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("board Modify commin");
@@ -86,11 +86,11 @@ public class BoardController {
         return "redirect:/board/read";
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/remove")
-    public String remove(Long bno,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
-        log.info("remove : " + bno);
-        boardService.remove(bno);
+    public String remove(BoardDTO boardDTO,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
+        log.info("remove : " + boardDTO.getBno());
+        boardService.remove(boardDTO.getBno());
         //삭제시에는 페이지 번호를 1로, 사이즈는 전달 받는다.
         redirectAttributes.addAttribute("page", 1);
         redirectAttributes.addAttribute("size", pageRequestDTO.getSize());

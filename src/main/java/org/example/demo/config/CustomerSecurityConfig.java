@@ -3,6 +3,7 @@ package org.example.demo.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.example.demo.security.handler.Custom403Handler;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -47,6 +49,11 @@ public class CustomerSecurityConfig {
                     .tokenValiditySeconds(60*60*24*30);     //30일
         });
 
+        //exception Handler 설정
+        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
+            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(acDeniedHandler());
+        });
+
         return http.build();
     }
 
@@ -73,6 +80,11 @@ public class CustomerSecurityConfig {
         JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
         repo.setDataSource(dataSource);     //통신을 위함
         return repo;
+    }
+    //AccessDeniedHandler 빈 등록
+    @Bean
+    public AccessDeniedHandler acDeniedHandler() {
+        return new Custom403Handler();
     }
 
 }
