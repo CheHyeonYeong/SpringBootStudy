@@ -2,8 +2,10 @@ package org.example.demo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.example.demo.dto.MemberJoinDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -22,4 +24,16 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/join")
+    public void joinGET(){
+        log.info("join get...............");
+    }
+
+    @PostMapping("/join")
+    public String joinPOST(MemberJoinDTO memberJoinDTO){
+        log.info("join get...............");
+        log.info("memberJoinDTO : " + memberJoinDTO);
+
+        return "redirect:/board/list";
+    }
 }
