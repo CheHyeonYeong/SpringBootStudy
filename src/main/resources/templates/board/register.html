@@ -35,6 +35,9 @@
 </div><!--content end-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const auth=[[${#authentication}]]
+
     const errors = [[${errors}]]
     console.log(errors);
 

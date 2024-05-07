@@ -3,7 +3,6 @@ package org.example.demo.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.example.demo.security.CustomUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +50,11 @@ public class CustomerSecurityConfig {
         return http.build();
     }
 
+    // 패스워드 암호화 처리하는 객체  -- 순환참조 문제로 인해서 다른 별개의 Configuration을 생성하여 처리...
+    // 순환 구조의 발생 원인은 userDetailsService에서 의존성 주입을 한 PasswordEncoder를 설정한 Configuration에서
+    // 다시 불러오는 구조가 되어 순환 구조가 됨.
+
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         log.info("web configure");
@@ -59,10 +63,10 @@ public class CustomerSecurityConfig {
     }
 
     //패스워드 암호화 처리하는 객체
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
     //PersistentTokenRepository
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
