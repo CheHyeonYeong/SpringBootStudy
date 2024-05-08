@@ -4,6 +4,8 @@ package org.example.demo.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.demo.security.handler.Custom403Handler;
+import org.example.demo.security.handler.CustomSocialLoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -56,7 +59,7 @@ public class CustomerSecurityConfig {
 
         http.oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
            httpSecurityOAuth2LoginConfigurer.loginPage("/member/login");
-//           httpSecurityOAuth2LoginConfigurer.successHandler()
+           httpSecurityOAuth2LoginConfigurer.successHandler(authenticationSuccessHandler());        //password가 1111이면 modify로 넘기게끔 유도
         });
 
         return http.build();
@@ -90,6 +93,13 @@ public class CustomerSecurityConfig {
     @Bean
     public AccessDeniedHandler acDeniedHandler() {
         return new Custom403Handler();
+    }
+
+    private final PasswordEncoder passwordEncoder;        //순환 참조로 인해 passwordEncoder Bean을 삭제 했기 때문에 annotattion으로 불러옴
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new CustomSocialLoginSuccessHandler(passwordEncoder);
     }
 
 }

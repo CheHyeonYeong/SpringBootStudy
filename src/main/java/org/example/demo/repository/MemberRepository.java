@@ -1,9 +1,12 @@
 package org.example.demo.repository;
 
+import jakarta.transaction.Transactional;
 import org.example.demo.domain.Member;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -16,5 +19,11 @@ public interface MemberRepository  extends JpaRepository<Member, String> {
 
     @EntityGraph(attributePaths = "roleSet")
     Optional<Member> findByEmail(String email);
+
+    @Modifying      //이 어노테이션을 사용하면 @Query에서 DML(insert/update/delete) 처리를 가능하게 함
+    @Transactional
+    @Query("update Member m set m.mpw =:mpw where  m.mid = :mid")
+    void updatePassword(@Param("mpw") String password, @Param("mid") String mid);
+
 
 }
