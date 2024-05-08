@@ -11,10 +11,12 @@ import org.example.demo.domain.MemberRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 //스프링 시큐리티에서는 UserDetails라는 인터페이스를 사용합니다
@@ -23,13 +25,14 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class MemberSecurityDTO extends User {
+public class MemberSecurityDTO extends User implements OAuth2User {
 
     private String mid;
     private String mpw;
     private String email;
     private boolean del;
     private boolean social;
+    private Map<String, Object> props;  //소셜 로그인 정보
 
     public MemberSecurityDTO(String username, String password, String email, boolean del, boolean social,
                              Collection<? extends GrantedAuthority> authorities) {      //GrantedAuthority는 security에서 받아온 것
@@ -44,6 +47,15 @@ public class MemberSecurityDTO extends User {
         this.social = social;
     }
 
+    @Override
+    public Map<String,Object> getAttributes() {
+        return this.getProps();
+    }
+
+    @Override
+    public String getName() {
+        return "";
+    }
 
 
 }

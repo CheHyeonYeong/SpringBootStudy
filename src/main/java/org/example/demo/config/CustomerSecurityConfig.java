@@ -54,6 +54,11 @@ public class CustomerSecurityConfig {
             httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(acDeniedHandler());
         });
 
+        http.oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
+           httpSecurityOAuth2LoginConfigurer.loginPage("/member/login");
+//           httpSecurityOAuth2LoginConfigurer.successHandler()
+        });
+
         return http.build();
     }
 

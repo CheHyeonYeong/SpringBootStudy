@@ -48,4 +48,14 @@ public class MemberRepositoroyTests {
 
         member1.getRoleSet().forEach(memberRole -> {log.info(memberRole.name());});
     }
+
+    @Test
+    public void testFindByEmail(){
+        Optional<Member> member = memberRepository.findByEmail("email1@test.com");
+        Member member1 = member.orElseThrow();
+        log.info(member1);
+        log.info(member1.getRoleSet());
+        member1.getRoleSet().forEach(memberRole -> {log.info(memberRole.name());});
+
+    }
 }
